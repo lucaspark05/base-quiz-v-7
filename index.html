@@ -567,7 +567,6 @@
             }
 
             showView(viewId) {
-                // 수정 완료: 화면 전환 시 지판, 애니메이션 상태 등을 완전히 초기화
                 this.clearFretboard(); 
                 if (typeof stopCompingPractice === 'function') stopCompingPractice();
 
@@ -681,7 +680,6 @@
                     subEl.textContent = "지정된 줄 안에서 정답 위치를 클릭하세요.";
                 } else if (this.currentMode === 4) {
                     this.targetPitch = currentTask.pitch; this.targetTargets = [];
-                    // 수정 완료: 오직 #fretboard에서만 정답 카운팅
                     document.querySelectorAll('#fretboard .fret').forEach(f => { if (parseInt(f.dataset.pitch) === this.targetPitch) this.targetTargets.push(f); });
                     this.foundTargets = 0; qEl.textContent = `모든 '${this.getNoteName(this.targetPitch)}' 찾기`;
                     subEl.textContent = `남은 개수: ${this.targetTargets.length}개`;
@@ -689,7 +687,6 @@
                     const rootPitch = currentTask.pitch; const intervals = [{name:"2도", semitones:2}, {name:"3도", semitones:4}, {name:"4도", semitones:5}, {name:"5도", semitones:7}];
                     const interval = intervals[Math.floor(Math.random() * intervals.length)];
                     this.targetPitch = (rootPitch + interval.semitones) % 12; this.targetTargets = [];
-                    // 수정 완료: 오직 #fretboard에서만 정답 카운팅 및 루트음 표시
                     document.querySelectorAll('#fretboard .fret').forEach(f => {
                         const pitch = parseInt(f.dataset.pitch);
                         if (pitch === this.targetPitch) this.targetTargets.push(f);
@@ -733,7 +730,6 @@
                 } else {
                     this.playSound('wrong'); this.showWrongTemp(fretDiv);
                     this.isQuestionActive = false; document.getElementById('btn-next').style.display = 'block'; 
-                    // 수정 완료: 오답 시 힌트 색상을 오직 #fretboard에만 표시
                     document.querySelectorAll('#fretboard .fret').forEach(f => {
                         if (parseInt(f.dataset.pitch) === this.targetPitch && (this.targetString === -1 || parseInt(f.dataset.string) === this.targetString)) {
                             f.classList.add('hint'); f.querySelector('.fret-note').textContent = notesSharp[this.targetPitch];
@@ -929,12 +925,91 @@
                 ] 
             },
 
-            { id: 9, title: "Example 1", bpm: 95, progression: "Dm7 - G7 - CM7", audioSrc: "example1.mp3", imgSrc: "ex1.png", leadInTime: 0.0, pattern: [] },
-            { id: 10, title: "Example 2", bpm: 95, progression: "Dm7 - G7 - CM7", audioSrc: "example2.mp3", imgSrc: "ex2.png", leadInTime: 0.0, pattern: [] },
-            { id: 11, title: "Example 3", bpm: 95, progression: "Dm7 - G7 - CM7", audioSrc: "example3.mp3", imgSrc: "ex3.png", leadInTime: 0.0, pattern: [] },
-            { id: 12, title: "Example 4", bpm: 95, progression: "Dm7 - G7 - CM7", audioSrc: "example4.mp3", imgSrc: "ex4.png", leadInTime: 0.0, pattern: [] }
-        ];
+            { 
+                id: 9, 
+                title: "Example 1", 
+                bpm: 95, 
+                progression: "Dm7 - G7 - CM7", 
+                audioSrc: "example1.mp3", 
+                imgSrc: "ex1.png", 
+                leadInTime: 3.0, 
+                pattern: [
+                    { b: 0, s: 1, f: 5 }, { b: 1, s: 3, f: 7 }, { b: 1.25, s: 3, f: 7 }, { b: 1.75, s: 2, f: 7 }, { b: 2.25, s: 1, f: 5 }, { b: 2.75, s: 1, f: 3 }, { b: 3, s: 1, f: 5 }, { b: 3.25, s: 1, f: 4 }, { b: 3.50, s: 0, f: 5 }, { b: 3.75, s: 0, f: 4 },
+                    { b: 4, s: 0, f: 3 }, { b: 4.5, s: 0, f: 3 }, { b: 5.25, s: 2, f: 3 }, { b: 5.5, s: 2, f: 4 }, { b: 5.75, s: 2, f: 5 }, { b: 6.25, s: 1, f: 3, mute: true }, { b: 6.5, s: 1, f: 2 }, { b: 6.75, s: 1, f: 2 }, { b: 7, s: 1, f: 3 }, { b: 7.25, s: 1, f: 3 },{ b: 7.50, s: 1, f: 5 },
+                    { b: 8, s: 1, f: 3 }, { b: 8.5, s: 1, f: 3 }, { b: 9, s: 2, f: 2 }, { b: 9.25, s: 2, f: 2 }, { b: 9.75, s: 2, f: 3 }, { b: 10.25, s: 1, f: 3, mute: true }, { b: 10.5, s: 2, f: 5 }, { b: 11, s: 2, f: 7 }, { b: 11.25, s: 2, f: 5 }, { b: 11.5, s: 1, f: 7 }, { b: 11.75, s: 1, f: 5 },
+                    { b: 12, s: 1, f: 3 }, { b: 12.5, s: 1, f: 3 }, { b: 13, s: 0, f: 0 }, { b: 13.25, s: 0, f: 0 }, { b: 13.75, s: 0, f: 1 }, { b: 14.25, s: 1, f: 3, mute: true }, { b: 14.5, s: 0, f: 3 }, { b: 15, s: 0, f: 3 }, { b: 15.25, s: 0, f: 5 }, { b: 15.5, s: 1, f: 3 },
 
+                    { b: 16, s: 1, f: 5 }, { b: 17, s: 3, f: 7 }, { b: 17.25, s: 3, f: 7 }, { b: 17.75, s: 2, f: 7 }, { b: 18.25, s: 1, f: 5 }, { b: 18.75, s: 1, f: 3 }, { b: 19, s: 1, f: 5 }, { b: 19.25, s: 1, f: 3 }, { b: 19.50, s: 0, f: 5 }, { b: 19.75, s: 0, f: 4 },
+                    { b: 20, s: 0, f: 3 }, { b: 20.5, s: 0, f: 3 }, { b: 21.25, s: 2, f: 3 }, { b: 21.5, s: 2, f: 4 }, { b: 21.75, s: 2, f: 5 }, { b: 22.25, s: 1, f: 3, mute: true }, { b: 22.5, s: 1, f: 2 }, { b: 22.75, s: 1, f: 2 }, { b: 23, s: 1, f: 3 }, { b: 23.25, s: 1, f: 3 },{ b: 23.50, s: 1, f: 5 },
+                    { b: 24, s: 1, f: 3 }, { b: 24.5, s: 1, f: 3 }, { b: 25, s: 2, f: 2 }, { b: 25.25, s: 2, f: 2 }, { b: 25.75, s: 2, f: 3 }, { b: 26.25, s: 1, f: 3, mute: true }, { b: 26.5, s: 2, f: 5 }, { b: 27, s: 2, f: 7 }, { b: 27.25, s: 2, f: 5 }, { b: 27.5, s: 1, f: 7 }, { b: 27.75, s: 1, f: 5 },
+                    { b: 28, s: 1, f: 3 }, { b: 28.5, s: 1, f: 3 }, { b: 29, s: 0, f: 0 }, { b: 29.25, s: 0, f: 0 }, { b: 29.75, s: 0, f: 1 }, { b: 30.25, s: 1, f: 3, mute: true }, { b: 30.5, s: 0, f: 3 }, { b: 31, s: 0, f: 3 }, { b: 31.25, s: 0, f: 5 }, { b: 31.5, s: 1, f: 3 }, { b: 32, s: 1, f: 5 }
+                ] 
+            },
+
+            { 
+                id: 10, 
+                title: "Example 2", 
+                bpm: 95, 
+                progression: "Dm7 - G7 - CM7", 
+                audioSrc: "example2.mp3", 
+                imgSrc: "ex2.png", 
+                leadInTime: 3.0, 
+                pattern: [
+                    { b: 0, s: 1, f: 5 }, { b: 0.25, s: 1, f: 5 }, { b: 0.75, s: 3, f: 5 }, { b: 1.25, s: 3, f: 7 }, { b: 1.75, s: 1, f: 5 }, { b: 2, s: 1, f: 5 }, { b: 2.25, s: 2, f: 3 }, { b: 2.5, s: 1, f: 5 }, { b: 2.75, s: 1, f: 3 }, { b: 3, s: 1, f: 5 }, { b: 3.25, s: 0, f: 7 }, { b: 3.5, s: 0, f: 8 },
+                    { b: 4, s: 0, f: 3 }, { b: 4.25, s: 0, f: 3 }, { b: 4.75, s: 2, f: 5 }, { b: 5.25, s: 2, f: 3 }, { b: 5.75, s: 2, f: 2 }, { b: 6, s: 2, f: 2 }, { b: 6.25, s: 2, f: 2 }, { b: 6.5, s: 1, f: 5 }, { b: 6.75, s: 1, f: 5 }, { b: 7, s: 0, f: 0 }, { b: 7.25, s: 0, f: 1 }, { b: 7.5, s: 0, f: 3 }, { b: 7.75, s: 1, f: 2 },
+                    { b: 8, s: 1, f: 3 }, { b: 8.25, s: 1, f: 3 }, { b: 8.75, s: 3, f: 9 }, { b: 9.25, s: 3, f: 7 }, { b: 9.75, s: 3, f: 5 }, { b: 10, s: 3, f: 5 }, { b: 10.25, s: 2, f: 7 }, { b: 10.5, s: 2, f: 5 }, { b: 10.75, s: 1, f: 7 },{ b: 11, s: 1, f: 5 }, { b: 11.25, s: 1, f: 3 }, { b: 11.5, s: 0, f: 5 }, { b: 11.75, s: 0, f: 3 },
+                    { b: 12, s: 1, f: 3 }, { b: 12.25, s: 1, f: 3 }, { b: 12.75, s: 3, f: 5 },{ b: 13.25, s: 3, f: 7 }, { b: 13.75, s: 3, f: 4 }, { b: 14, s: 3, f: 4 }, { b: 14.25, s: 3, f: 5 }, { b: 14.5, s: 3, f: 4 }, { b: 14.75, s: 1, f: 5 },{ b: 15, s: 3, f: 4 }, { b: 15.25, s: 2, f: 5 }, { b: 15.5, s: 1, f: 3 },
+
+                    { b: 16, s: 1, f: 5 }, { b: 16.25, s: 1, f: 5 }, { b: 16.75, s: 3, f: 5 }, { b: 17.25, s: 3, f: 7 }, { b: 17.75, s: 1, f: 5 }, { b: 18, s: 1, f: 5 }, { b: 18.25, s: 2, f: 3 }, { b: 18.5, s: 1, f: 5 }, { b: 18.75, s: 1, f: 3 }, { b: 19, s: 1, f: 5 }, { b: 19.25, s: 0, f: 7 }, { b: 19.5, s: 0, f: 8 },
+                    { b: 20, s: 0, f: 3 }, { b: 20.25, s: 0, f: 3 }, { b: 20.75, s: 2, f: 5 }, { b: 21.25, s: 2, f: 3 }, { b: 21.75, s: 2, f: 2 }, { b: 22, s: 2, f: 2 }, { b: 22.25, s: 2, f: 2 }, { b: 22.5, s: 1, f: 5 }, { b: 22.75, s: 1, f: 5 }, { b: 23, s: 0, f: 0 }, { b: 23.25, s: 0, f: 1 }, { b: 23.5, s: 0, f: 3 }, { b: 23.75, s: 1, f: 2 },
+                    { b: 24, s: 1, f: 3 }, { b: 24.25, s: 1, f: 3 }, { b: 24.75, s: 3, f: 9 }, { b: 25.25, s: 3, f: 7 }, { b: 25.75, s: 3, f: 5 }, { b: 26, s: 3, f: 5 }, { b: 26.25, s: 2, f: 7 }, { b: 26.5, s: 2, f: 5 }, { b: 26.75, s: 1, f: 7 }, { b: 27, s: 1, f: 5 }, { b: 27.25, s: 1, f: 3 }, { b: 27.5, s: 0, f: 5 }, { b: 27.75, s: 0, f: 3 },
+                    { b: 28, s: 1, f: 3 }, { b: 28.25, s: 1, f: 3 }, { b: 28.75, s: 3, f: 5 },{ b: 29.25, s: 3, f: 7 }, { b: 29.75, s: 3, f: 4 }, { b: 30, s: 3, f: 4 }, { b: 30.25, s: 3, f: 5 }, { b: 30.5, s: 3, f: 4 }, { b: 30.75, s: 1, f: 5 },{ b: 31, s: 3, f: 4 }, { b: 31.25, s: 2, f: 5 }, { b: 31.5, s: 1, f: 3 }, { b: 32, s: 1, f: 5 }
+                ] 
+            },
+
+            { 
+                id: 11, 
+                title: "Example 3", 
+                bpm: 95, 
+                progression: "Dm7 - G7 - CM7", 
+                audioSrc: "example3.mp3", 
+                imgSrc: "ex3.png", 
+                leadInTime: 3.0, 
+                pattern: [
+                    { b: 0, s: 1, f: 5 }, { b: 0.75, s: 1, f: 7 }, { b: 1.00, s: 1, f: 8 }, { b: 1.25, s: 2, f: 7 }, { b: 1.75, s: 2, f: 10 }, { b: 2, s: 2, f: 12 }, { b: 2.25, s: 2, f: 12 }, { b: 2.5, s: 2, f: 10 }, { b: 3, s: 2, f: 12 },
+                    { b: 4, s: 0, f: 3 }, { b: 4.75, s: 0, f: 5 }, { b: 5.00, s: 0, f: 7 }, { b: 5.25, s: 1, f: 5 }, { b: 5.75, s: 1, f: 7 }, { b: 6, s: 1, f: 8 }, { b: 6.25, s: 1, f: 8 }, { b: 6.5, s: 1, f: 7 }, { b: 7, s: 1, f: 5 }, { b: 7.5, s: 0, f: 7 },
+                    { b: 8, s: 1, f: 3 }, { b: 8.75, s: 1, f: 5 }, { b: 9.00, s: 1, f: 7 }, { b: 9.25, s: 2, f: 5 }, { b: 9.75, s: 2, f: 7 }, { b: 10, s: 2, f: 9 }, { b: 10.25, s: 3, f: 7 }, { b: 10.5, s: 2, f: 9 }, { b: 10.75, s: 2, f: 7 }, { b: 11, s: 2, f: 5 }, { b: 11.25, s: 2, f: 7 }, { b: 11.5, s: 2, f: 6 }, { b: 11.75, s: 2, f: 5 },
+                    { b: 12, s: 1, f: 3 }, { b: 12.75, s: 0, f: 3 }, { b: 13.00, s: 0, f: 5 }, { b: 13.25, s: 1, f: 3 }, { b: 13.75, s: 1, f: 5 }, { b: 14, s: 1, f: 7 }, { b: 14.25, s: 0, f: 0 }, { b: 14.5, s: 0, f: 1 }, { b: 14.75, s: 0, f: 0 }, { b: 15, s: 0, f: 3 }, { b: 15.25, s: 0, f: 0 }, { b: 15.5, s: 0, f: 5 }, { b: 15.75, s: 0, f: 7 },
+
+                    { b: 16, s: 1, f: 5 }, { b: 16.75, s: 1, f: 7 }, { b: 17.00, s: 1, f: 8 }, { b: 17.25, s: 2, f: 7 }, { b: 17.75, s: 2, f: 10 }, { b: 18, s: 2, f: 12 }, { b: 18.25, s: 2, f: 12 }, { b: 18.5, s: 2, f: 10 }, { b: 19, s: 2, f: 12 },
+                    { b: 20, s: 0, f: 3 }, { b: 20.75, s: 0, f: 5 }, { b: 21.00, s: 0, f: 7 }, { b: 21.25, s: 1, f: 5 }, { b: 21.75, s: 1, f: 7 }, { b:22, s: 1, f: 8 }, { b: 22.25, s: 1, f: 8 }, { b: 22.5, s: 1, f: 7 }, { b: 23, s: 1, f: 5 }, { b: 23.5, s: 0, f: 7 },
+                    { b: 24, s: 1, f: 3 }, { b: 24.75, s: 1, f: 5 }, { b: 25.00, s: 1, f: 7 }, { b: 25.25, s: 2, f: 5 }, { b: 25.75, s: 2, f: 7 }, { b: 26, s: 2, f: 9 }, { b: 26.25, s: 3, f: 7 }, { b: 26.5, s: 2, f: 9 }, { b: 26.75, s: 2, f: 7 }, { b: 27, s: 2, f: 5 }, { b: 27.25, s: 2, f: 7 }, { b: 27.5, s: 2, f: 6 }, { b: 27.75, s: 2, f: 5 },
+                    { b: 28, s: 1, f: 3 }, { b: 28.75, s: 0, f: 3 }, { b: 29.00, s: 0, f: 5 }, { b: 29.25, s: 1, f: 3 }, { b: 29.75, s: 1, f: 5 }, { b: 30, s: 1, f: 7 }, { b: 30.25, s: 0, f: 0 }, { b: 30.5, s: 0, f: 1 }, { b: 30.75, s: 0, f: 0 }, { b: 31, s: 0, f: 3 }, { b: 31.25, s: 0, f: 0 }, { b: 31.5, s: 0, f: 5 }, { b: 31.75, s: 0, f: 7 }, { b: 32, s: 1, f: 5 }
+                ]
+            },
+            
+            { 
+                id: 12,
+                title: "Example 4",
+                bpm: 95, 
+                progression: "Dm7 - G7 - CM7",
+                audioSrc: "example4.mp3",
+                imgSrc: "ex4.png", 
+                leadInTime: 0.0, 
+                pattern: [
+                    { b: 0, s: 1, f: 5 }, { b: 0.25, s: 3, f: 7 }, { b: 0.5, s: 2, f: 7 }, { b: 0.75, s: 1, f: 5 }, { b: 1.25, s: 2, f: 5 }, { b: 1.5, s: 2, f: 6 }, { b: 1.75, s: 2, f: 7 }, { b: 3.25, s: 1, f: 3 }, { b: 3.5, s: 1, f: 5 }, { b: 3.75, s: 0, f: 5 },
+                    { b: 4, s: 0, f: 3 }, { b: 4.25, s: 2, f: 5 }, { b: 4.5, s: 1, f: 5 }, { b: 4.75, s: 0, f: 3 }, { b: 5.25, s: 2, f: 3 }, { b: 5.5, s: 2, f: 4 }, { b: 5.75, s: 2, f: 5 }, { b: 6.25, s: 1, f: 3 }, { b: 6.5, s: 1, f: 4 }, { b: 6.75, s: 1, f: 5 },
+                    { b: 8, s: 1, f: 3 }, { b: 8.25, s: 3, f: 5 }, { b: 8.5, s: 2, f: 5 }, { b: 8.75, s: 1, f: 3 }, { b: 9.25, s: 2, f: 3 }, { b: 9.5, s: 2, f: 4 }, { b: 9.75, s: 2, f: 5 }, { b: 11, s: 0, f: 3 }, { b: 11.25, s: 0, f: 5 }, { b: 11.5, s: 1, f: 3 }, { b: 11.75, s: 0, f: 5 },
+                    { b: 12, s: 1, f: 3 }, { b: 12.25, s: 3, f: 5 }, { b: 12.5, s: 2, f: 5 }, { b: 12.75, s: 1, f: 3 }, { b: 13.25, s: 3, f: 5 }, { b: 13.5, s: 2, f: 5 }, { b: 13.75, s: 1, f: 3 }, { b: 14.25, s: 1, f: 5 }, { b: 14.5, s: 1, f: 4 }, { b: 14.75, s: 1, f: 3 }, { b: 11.25, s: 0, f: 3 }, { b: 11.5, s: 0, f: 1 }, { b: 11.75, s: 0, f: 0 },
+
+                    { b: 16, s: 1, f: 5 }, { b: 16.25, s: 3, f: 7 }, { b: 16.5, s: 2, f: 7 }, { b: 16.75, s: 1, f: 5 }, { b: 17.25, s: 2, f: 5 }, { b: 17.5, s: 2, f: 6 }, { b: 17.75, s: 2, f: 7 }, { b: 19.25, s: 1, f: 3 }, { b: 19.5, s: 1, f: 5 }, { b: 19.75, s: 0, f: 5 },
+                    { b: 20, s: 0, f: 3 }, { b: 20.25, s: 2, f: 5 }, { b: 20.5, s: 1, f: 5 }, { b: 20.75, s: 0, f: 3 }, { b: 21.25, s: 2, f: 3 }, { b: 21.5, s: 2, f: 4 }, { b: 21.75, s: 2, f: 5 }, { b: 22.25, s: 1, f: 3 }, { b: 22.5, s: 1, f: 4 }, { b: 22.75, s: 1, f: 5 },
+                    { b: 24, s: 1, f: 3 }, { b: 24.25, s: 3, f: 5 }, { b: 24.5, s: 2, f: 5 }, { b: 24.75, s: 1, f: 3 }, { b: 25.25, s: 2, f: 3 }, { b: 25.5, s: 2, f: 4 }, { b: 25.75, s: 2, f: 5 }, { b: 27, s: 0, f: 3 }, { b: 27.25, s: 0, f: 5 }, { b: 27.5, s: 1, f: 3 }, { b: 27.75, s: 0, f: 5 },
+                    { b: 28, s: 1, f: 3 }, { b: 28.25, s: 3, f: 5 }, { b: 28.5, s: 2, f: 5 }, { b: 28.75, s: 1, f: 3 }, { b: 29.25, s: 3, f: 5 }, { b: 29.5, s: 2, f: 5 }, { b: 29.75, s: 1, f: 3 }, { b: 30.25, s: 1, f: 5 }, { b: 30.5, s: 1, f: 4 }, { b: 30.75, s: 1, f: 3 }, { b: 31.25, s: 0, f: 3 }, { b: 31.5, s: 0, f: 1 }, { b: 31.75, s: 0, f: 0 }, { b: 32, s: 1, f: 5 }
+                ] 
+            }
+        ];
+        
         function selectCompingPattern(patternId) {
             const found = compingPatterns.find(p => p.id === patternId);
             if (!found) return;
